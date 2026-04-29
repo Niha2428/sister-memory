@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For Our Sister ❤️</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    :root{
+      --bg1:#140b1b;
+      --bg2:#241030;
+      --card:rgba(255,255,255,0.08);
+      --border:rgba(255,255,255,0.14);
+      --text:#ffffff;
+      --muted:#eadff5;
+      --accent:#ff77b7;
+      --accent2:#ffd166;
+      --shadow:0 10px 35px rgba(0,0,0,0.35);
+    }
+
+    body{
+      font-family:'Poppins',sans-serif;
+      color:var(--text);
+      min-height:100vh;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at top left, rgba(255,119,183,0.18), transparent 30%),
+        radial-gradient(circle at top right, rgba(255,209,102,0.14), transparent 30%),
+        linear-gradient(135deg,var(--bg1),var(--bg2));
+    }
+
+    .hearts{
+      position:fixed;
+      inset:0;
+      overflow:hidden;
+      pointer-events:none;
+      z-index:0;
+    }
+
+    .heart{
+      position:absolute;
+      bottom:-40px;
+      color:rgba(255,255,255,0.14);
+      animation:floatUp linear infinite;
+      font-size:18px;
+    }
+
+    @keyframes floatUp{
+      from{ transform:translateY(0) scale(1); opacity:0; }
+      20%{ opacity:1; }
+      to{ transform:translateY(-120vh) scale(1.5); opacity:0; }
+    }
+
+    .page{
+      position:absolute;
+      inset:0;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+      opacity:0;
+      transform:scale(1.03);
+      transition:opacity 0.9s ease, transform 0.9s ease;
+      pointer-events:none;
+      z-index:1;
+    }
+
+    .page.active{
+      opacity:1;
+      transform:scale(1);
+      pointer-events:auto;
+      z-index:5;
+    }
+
+    .content-box{
+      width:min(1100px,96%);
+      max-height:90vh;
+      overflow:auto;
+      background:var(--card);
+      border:1px solid var(--border);
+      backdrop-filter:blur(10px);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:28px;
+      text-align:center;
+    }
+
+    /* ── Video-only pages ─────────────────────────────────────────────────── */
+    .video-page .content-box{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:18px;
+    }
+
+    .video-page h1{
+      margin-bottom:0;
+    }
+
+    .solo-video-wrap{
+      width:100%;
+      max-width:860px;
+      border-radius:18px;
+      overflow:hidden;
+      background:#000;
+      box-shadow:0 12px 36px rgba(0,0,0,0.45);
+      border:1px solid rgba(255,255,255,0.12);
+    }
+
+    .solo-video-wrap video{
+      width:100%;
+      display:block;
+      max-height:58vh;
+      object-fit:contain;
+      background:#000;
+    }
+
+    /* ── Common ───────────────────────────────────────────────────────────── */
+
+    h1{
+      font-family:'Great Vibes',cursive;
+      font-size:clamp(2.4rem,6vw,4.3rem);
+      margin-bottom:10px;
+      color:#fff;
+    }
+
+    .subtitle{
+      font-size:clamp(1rem,2vw,1.15rem);
+      color:var(--muted);
+      margin-bottom:14px;
+    }
+
+    .live-text{
+      font-size:clamp(1.05rem,2vw,1.22rem);
+      min-height:40px;
+      color:#fff7fd;
+    }
+
+    .cursor{ animation:blink .8s infinite; }
+    @keyframes blink{ 50%{opacity:0;} }
+
+    .slider{
+      position:relative;
+      width:100%;
+      max-width:950px;
+      height:min(58vh,480px);
+      margin:18px auto 0;
+      border-radius:22px;
+      overflow:hidden;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.12);
+      box-shadow:0 10px 30px rgba(0,0,0,0.28);
+    }
+
+    .slide{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      object-position:center;
+      opacity:0;
+      transition:opacity 0.6s ease;
+      background:#120b18;
+      padding:10px;
+    }
+
+    .slide.active{ opacity:1; }
+
+    .side-text{
+      max-width:760px;
+      margin:0 auto;
+      line-height:1.9;
+      font-size:clamp(1rem,2vw,1.14rem);
+      color:#fffafc;
+    }
+
+    .highlight{
+      color:var(--accent2);
+      font-weight:600;
+    }
+
+    .next-msg{
+      margin-top:16px;
+      font-size:1rem;
+      color:#fff3fa;
+      opacity:0;
+      transition:opacity 0.8s ease;
+    }
+
+    .next-msg.show{ opacity:1; }
+
+    .footer-note{
+      margin-top:18px;
+      font-size:0.98rem;
+      color:#f5dff0;
+    }
+
+    .nav-btn{
+      position:fixed;
+      bottom:20px;
+      border:none;
+      padding:12px 20px;
+      border-radius:14px;
+      font-size:18px;
+      cursor:pointer;
+      z-index:9999;
+      color:white;
+      background:linear-gradient(135deg, rgba(255,119,183,0.88), rgba(183,84,255,0.85));
+      box-shadow:0 8px 24px rgba(0,0,0,0.28);
+      transition:transform 0.2s ease;
+    }
+
+    .nav-btn:hover{ transform:translateY(-2px); }
+    .nav-btn:active{ transform:translateY(1px); }
+
+    #prev{left:20px;}
+    #next{right:20px;}
+
+    .music-btn{
+      position:fixed;
+      top:18px;
+      right:18px;
+      z-index:9999;
+      border:1px solid rgba(255,255,255,0.18);
+      background:rgba(255,255,255,0.08);
+      color:white;
+      border-radius:999px;
+      padding:10px 16px;
+      cursor:pointer;
+      backdrop-filter:blur(8px);
+    }
+
+    .music-btn:hover{ background:rgba(255,255,255,0.14); }
+
+    .dots{
+      position:fixed;
+      bottom:28px;
+      left:50%;
+      transform:translateX(-50%);
+      display:flex;
+      gap:8px;
+      z-index:9999;
+    }
+
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:rgba(255,255,255,0.25);
+      transition:all 0.3s ease;
+    }
+
+    .dot.active{
+      width:26px;
+      border-radius:999px;
+      background:var(--accent);
+    }
+
+    @media (max-width:768px){
+      .content-box{ padding:20px; }
+      .slider{ height:42vh; }
+      .nav-btn{ padding:10px 16px; font-size:16px; }
+      .dots{ bottom:80px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hearts" aria-hidden="true"></div>
+
+  <audio id="music" loop>
+    <source src="music.mp3" type="audio/mp3">
+  </audio>
+
+  <button class="music-btn" id="musicToggle" aria-label="Play music">🎵 Play Music</button>
+
+  <!-- PAGE 1 — Intro -->
+  <section class="page active">
+    <div class="content-box">
+      <h1>My Sister ❤️</h1>
+      <div class="subtitle">A little page made with love, memories, and blessings</div>
+      <div id="typing" class="live-text"></div>
+      <div class="footer-note">Click next and relive our sweetest memories ✨</div>
+    </div>
+  </section>
+
+  <!-- PAGE 2 — Childhood -->
+  <section class="page">
+    <div class="content-box">
+      <h1>Little Girl 👶</h1>
+      <div class="subtitle">The sweetest beginning of so many beautiful memories</div>
+      <div class="slider" id="childhood">
+        <img src="ch1.jpg" alt="Childhood memory 1" class="slide active">
+        <img src="ch2.jpg" alt="Childhood memory 2" class="slide">
+        <img src="ch3.jpg" alt="Childhood memory 3" class="slide">
+        <img src="ch4.jpg" alt="Childhood memory 4" class="slide">
+        <img src="ch5.jpg" alt="Childhood memory 5" class="slide">
+        <img src="ch6.jpg" alt="Childhood memory 6" class="slide">
+      </div>
+      <div class="next-msg">Click Next ➜</div>
+    </div>
+  </section>
+
+  <!-- PAGE 3 — Family -->
+  <section class="page">
+    <div class="content-box">
+      <h1>Family ❤️</h1>
+      <div class="subtitle">Home always feels more beautiful when you are in it</div>
+      <div class="slider" id="family">
+        <img src="f1.jpg" alt="Family photo 1" class="slide active">
+        <img src="f2.jpg" alt="Family photo 2" class="slide">
+        <img src="f3.jpg" alt="Family photo 3" class="slide">
+        <img src="f4.jpg" alt="Family photo 4" class="slide">
+        <img src="f5.jpg" alt="Family photo 5" class="slide">
+        <img src="f6.jpg" alt="Family photo 6" class="slide">
+        <img src="f7.jpg" alt="Family photo 7" class="slide">
+        <img src="f8.jpg" alt="Family photo 8" class="slide">
+      </div>
+      <div class="next-msg">Click Next ➜</div>
+    </div>
+  </section>
+
+  <!-- PAGE 4 — our childhood -->
+  <section class="page">
+    <div class="content-box">
+      <h1>Our Childhood ❤️</h1>
+      <div class="subtitle">Little moments, big memories</div>
+      <div class="slider" id="our">
+        <img src="o1.jpg" alt="childhood photo 1" class="slide active">
+        <img src="o2.jpg" alt="childhood photo 2" class="slide">
+        <img src="o3.jpg" alt="childhood photo 3" class="slide">
+        <img src="o4.jpg" alt="childhood photo 4" class="slide">
+        <img src="o5.jpg" alt="childhood photo 5" class="slide">
+        <img src="o6.jpg" alt="childhood photo 6" class="slide">
+        <img src="o7.jpg" alt="childhood photo 7" class="slide">
+        <img src="o8.jpg" alt="childhood photo 8" class="slide">
+      </div>
+      <div class="next-msg">Click Next ➜</div>
+    </div>
+  </section>
+
+  <!-- PAGE 5 — with me -->
+  <section class="page">
+    <div class="content-box">
+      <h1>With me ❤️</h1>
+      <div class="subtitle">Every moment with you is a memory I’ll cherish forever.</div>
+      <div class="slider" id="with_me">
+        <img src="m1.jpg" alt="with me photo 1" class="slide active">
+        <img src="m2.jpg" alt="with me photo 2" class="slide">
+        <img src="m3.jpg" alt="with me photo 3" class="slide">
+        <img src="m4.jpg" alt="with me photo 4" class="slide">
+        <img src="m5.jpg" alt="with me photo 5" class="slide">
+        <img src="m6.jpg" alt="with me photo 6" class="slide">
+      </div>
+      <div class="next-msg">Click Next ➜</div>
+    </div>
+  </section>
+  <!-- PAGE 6 — Squad Photos -->
+  <section class="page">
+    <div class="content-box">
+      <h1>Our Squad 😄</h1>
+      <div class="subtitle">Laughter, teasing, madness, and unforgettable moments together</div>
+      <div class="slider" id="squad">
+        <img src="s1.jpg" alt="Squad memory 1" class="slide active">
+        <img src="s2.jpg" alt="Squad memory 2" class="slide">
+        <img src="s3.jpg" alt="Squad memory 3" class="slide">
+        <img src="s4.jpg" alt="Squad memory 4" class="slide">
+        <img src="s5.jpg" alt="Squad memory 5" class="slide">
+        <img src="s6.jpg" alt="Squad memory 5" class="slide">
+        <img src="s7.jpg" alt="Squad memory 5" class="slide">
+        <img src="s8.jpg" alt="Squad memory 5" class="slide">
+        <img src="s9.jpg" alt="Squad memory 5" class="slide">
+        <img src="s10.jpg" alt="Squad memory 5" class="slide">
+      </div>
+      <div class="next-msg">Click Next ➜</div>
+    </div>
+  </section>
+
+<!-- PAGE 7 — Squad Video 1 -->
+<section class="page video-page" data-video="sv1">
+  <div class="content-box">
+    <h1>Squad Moments 🎬</h1>
+    <div class="subtitle">You just had to be there 😄</div>
+
+    <div class="solo-video-wrap">
+      <!-- Video muted -->
+      <video id="sv1" src="sv1.mp4" controls muted plays in line preload="metadata"></video>
+    </div>
+
+    <!-- Background music -->
+    <audio id="bg-music" src="song.mp3" autoplay loop></audio>
+
+    <div class="next-msg show">Click Next ➜</div>
+  </div>
+</section>
+
+<!-- PAGE — Her Solo Photos -->
+<section class="page">
+  <div class="content-box">
+    <h1>Just You 💖</h1>
+    <div class="subtitle">Every moment, every smile… you shine beautifully</div>
+
+    <div class="slider" id="solo">
+      <img src="so1.jpg" class="slide active">
+      <img src="so2.jpg" class="slide">
+      <img src="so3.jpg" class="slide">
+      <img src="so4.jpg" class="slide">
+      <img src="so5.jpg" class="slide">
+      <img src="so6.jpg" class="slide">
+      <img src="so8.jpg" class="slide">
+      <img src="so10.jpg" class="slide">
+      <img src="so11.jpg" class="slide">
+      <img src="so12.jpg" class="slide">
+      <img src="so13.jpg" class="slide">
+    </div>
+
+    <div class="next-msg">Click Next ➜</div>
+  </div>
+</section>
+
+
+  <!-- PAGE 7 — New Beginning (text) -->
+  <section class="page">
+    <div class="content-box">
+      <h1>New Beginning 💍</h1>
+      <div class="side-text">
+        From childhood smiles to this beautiful new chapter, you have always brought warmth and love wherever you go.<br><br>
+        <span class="highlight">You deserve endless happiness, peace, laughter, and all the beautiful things life can offer.</span><br><br>
+        No matter how life changes, you will always be my sister, my support, and one of the most precious blessings in my life. 💖
+      </div>
+      <div class="next-msg show">Click Next ➜</div>
+    </div>
+  </section>
+
+  <!-- PAGE 8 — Wedding Video 1 -->
+  <section class="page video-page" data-video="w1">
+    <div class="content-box">
+      <h1>The Big Day 💍</h1>
+      <div class="subtitle">A moment we will cherish forever</div>
+      <div class="solo-video-wrap">
+        <video id="w1" src="w1.mp4" controls preload="metadata"></video>
+      </div>
+      <div class="next-msg show">Click Next ➜</div>
+    </div>
+  </section>
+
+  <!-- PAGE 9 — Wedding Video 2 -->
+  <section class="page video-page" data-video="w2">
+    <div class="content-box">
+      <h1>Pure Joy 🌸</h1>
+      <div class="subtitle">Your happiness is our greatest blessing</div>
+      <div class="solo-video-wrap">
+        <video id="w2" src="w2.mp4" controls preload="metadata"></video>
+      </div>
+      <div class="next-msg show">Click Next ➜</div>
+    </div>
+  </section>
+
+  <!-- PAGE 10 — Forever -->
+  <section class="page">
+    <div class="content-box">
+      <h1>Forever ❤️</h1>
+      <div class="side-text">
+        No matter where life takes us, one thing will never change —<br><br>
+        <span class="highlight">my love, prayers, and support will always be with you.</span><br><br>
+        Stay happy, stay blessed, and keep smiling always.
+        You are deeply loved today, tomorrow, and forever. 💕
+      </div>
+      <div class="footer-note">With all my love — always together ✨</div>
+    </div>
+  </section>
+
+  <button id="prev" class="nav-btn" aria-label="Previous page">⬅</button>
+  <button id="next" class="nav-btn" aria-label="Next page">➡</button>
+
+  <div class="dots" id="dots"></div>
+
+  <script>
+    const pages      = document.querySelectorAll('.page');
+    const dotsWrap   = document.getElementById('dots');
+    const music      = document.getElementById("music");
+    const musicToggle= document.getElementById("musicToggle");
+
+    let current        = 0;
+    let musicPlaying   = false;
+    let bgStarted      = false;
+    let sliderStarted  = {};
+
+    // ── Dots ─────────────────────────────────────────────────────────────────
+    pages.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === 0 ? ' active' : '');
+      dotsWrap.appendChild(d);
+    });
+    const dots = document.querySelectorAll('.dot');
+
+    function updateDots(){
+      dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    }
+
+    // ── Music ─────────────────────────────────────────────────────────────────
+    function startBgMusic(){
+      music.play().then(() => { bgStarted = true; musicPlaying = true; }).catch(()=>{});
+    }
+
+    music.addEventListener('play',  () => { musicToggle.textContent = "⏸ Pause Music"; });
+    music.addEventListener('pause', () => { musicToggle.textContent = "🎵 Play Music";  });
+
+    musicToggle.addEventListener("click", () => {
+      if(musicPlaying){ music.pause(); musicPlaying = false; }
+      else { music.play().then(()=>{ bgStarted=true; musicPlaying=true; }).catch(()=>{}); }
+    });
+
+    function wireVideo(videoEl){
+       const isSquadVideo = videoEl.id === "sv1";
+
+       videoEl.addEventListener('play', () => {
+        // Only pause music for NON-squad videos
+       if(!isSquadVideo && !music.paused){
+           music.pause();
+         }
+       });
+
+      videoEl.addEventListener('pause', () => {
+         if(!isSquadVideo && musicPlaying){
+            music.play().catch(()=>{});
+          }
+        });
+
+      videoEl.addEventListener('ended', () => {
+        if(!isSquadVideo && musicPlaying){
+           music.play().catch(()=>{});
+        }
+        });
+    }
+    // Wire all videos up front
+    document.querySelectorAll('video').forEach(wireVideo);
+
+    // ── Stop all videos except on the active page ─────────────────────────────
+    function stopAllVideos(){
+      document.querySelectorAll('video').forEach(v => {
+        if(!v.paused){ v.pause(); }
+      });
+    }
+
+    // ── Auto-play video when landing on a video page ──────────────────────────
+    function tryAutoPlayVideo(pageEl){
+      const videoId = pageEl.dataset.video;
+      if(!videoId) return;
+      const vid = document.getElementById(videoId);
+      if(!vid) return;
+      setTimeout(() => { vid.play().catch(()=>{}); }, 700);
+    }
+
+    // ── Navigate ──────────────────────────────────────────────────────────────
+    function showPage(i){
+      if(i < 0 || i >= pages.length) return;
+
+      pages[current].classList.remove("active");
+      stopAllVideos();
+
+      current = i;
+      pages[current].classList.add("active");
+      updateDots();
+
+      if(!bgStarted) startBgMusic();
+
+      // Start photo slider if this page has one
+      const slider = pages[current].querySelector(".slider");
+      if(slider){
+         setTimeout(() => {
+            const id = slider.getAttribute("id");
+            if(id && !sliderStarted[id]){
+               runSlider(id);
+               sliderStarted[id] = true;
+              }
+         }, 500); // small delay ensures DOM is fully active
+    }
+
+      tryAutoPlayVideo(pages[current]);
+   }
+
+    document.getElementById("next").addEventListener("click", () => {
+      if(current < pages.length - 1) showPage(current + 1);
+    });
+    document.getElementById("prev").addEventListener("click", () => {
+      if(current > 0) showPage(current - 1);
+    });
+    document.addEventListener("keydown", e => {
+      if(e.key === "ArrowRight" && current < pages.length - 1) showPage(current + 1);
+      if(e.key === "ArrowLeft"  && current > 0)                showPage(current - 1);
+    });
+
+    // ── Typing animation ─────────────────────────────────────────────────────
+    const txt = "A journey of love, laughter, and unforgettable memories ✨";
+    let n = 0;
+    const typingEl = document.getElementById("typing");
+    function type(){
+      if(n <= txt.length){
+        typingEl.innerHTML = txt.slice(0, n) + '<span class="cursor">|</span>';
+        n++;
+        setTimeout(type, 65);
+      }
+    }
+    type();
+
+    // ── Photo slider ──────────────────────────────────────────────────────────
+    function runSlider(id){
+      const box = document.getElementById(id);
+      if(!box) return;
+      const slides  = box.querySelectorAll('.slide');
+      const nextMsg = box.parentElement.querySelector('.next-msg');
+      let idx = 0;
+
+      const timer = setInterval(() => {
+        slides[idx].classList.remove('active');
+        idx = (idx + 1) % slides.length;
+        slides[idx].classList.add('active');
+
+        if(idx === slides.length - 1){
+          clearInterval(timer);
+          if(nextMsg) nextMsg.classList.add('show');
+        }
+      }, 1500);
+    }
+
+    // ── Floating hearts ───────────────────────────────────────────────────────
+    function createHearts(){
+      const wrap = document.querySelector('.hearts');
+      for(let i = 0; i < 18; i++){
+        const h = document.createElement('div');
+        h.className = 'heart';
+        h.innerHTML = '❤';
+        h.style.left             = Math.random() * 100 + 'vw';
+        h.style.animationDuration= (6 + Math.random() * 8) + 's';
+        h.style.animationDelay   = (Math.random() * 5) + 's';
+        h.style.fontSize         = (14 + Math.random() * 18) + 'px';
+        wrap.appendChild(h);
+      }
+    }
+    createHearts();
+  </script>
+</body>
+</html>
